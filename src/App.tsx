@@ -102,13 +102,13 @@ function App() {
     globeRef.current?.pointOfView(CONTINENTAL_US_VIEW, 1000);
   }, []);
 
-  async function runSearch(searchSource: DataSource, searchQuery: string) {
+  async function runSearch(searchSource: DataSource, searchQuery: string): Promise<GeoRecord[]> {
     if (searchSource.needsQuery && !searchQuery.trim()) {
       setResults([]);
       setSelected(null);
       setError(null);
       setLoading(false);
-      return;
+      return [];
     }
 
     setLoading(true);
@@ -117,8 +117,10 @@ function App() {
       const data = await searchSource.fetch(searchQuery, 100);
       setResults(data);
       setSelected(null);
+      return data;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
+      return [];
     } finally {
       setLoading(false);
     }
@@ -144,7 +146,7 @@ function App() {
     }
   }
 
-  function handleDataSetClick(dataSet: DataSet) {
+  async function handleDataSetClick(dataSet: DataSet) {
     const nextSource = getSourceById(dataSet.sourceId);
     if (!nextSource) return;
     setActiveTab('filter');
@@ -156,7 +158,16 @@ function App() {
     setPopup(null);
     setError(null);
     setShowCustomUrl(false);
-    runSearch(nextSource, dataSet.query);
+    const data = await runSearch(nextSource, dataSet.query);
+    if (data[0]) {
+      setSelected(data[0]);
+      if (data[0].latitude !== undefined && data[0].longitude !== undefined) {
+        globeRef.current?.pointOfView(
+          { lat: data[0].latitude, lng: data[0].longitude, altitude: 0.35 },
+          1000
+        );
+      }
+    }
   }
 
   function handleReset() {
