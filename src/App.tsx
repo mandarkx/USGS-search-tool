@@ -2,6 +2,7 @@ import { useMemo, useRef, useState, useCallback } from 'react';
 import { loadCustomLocations, type GeoRecord } from './lib/geonames';
 import { DATA_SETS, DATA_SOURCES, getSourceById, type DataSet, type DataSource } from './lib/sources';
 import GlobeMap from './components/GlobeMap';
+import RecordDetails from './components/RecordDetails';
 import ResultsList from './components/ResultsList';
 import useWindowSize from './hooks/useWindowSize';
 import type { GlobeMethods } from 'react-globe.gl';
@@ -69,6 +70,9 @@ function App() {
   const handleLayerClick = useCallback((record: GeoRecord, coords: { lat: number; lng: number; altitude?: number }) => {
     setSelected(record);
     setPopup(null);
+    if (record.latitude !== undefined && record.longitude !== undefined) {
+      globeRef.current?.pointOfView({ lat: record.latitude, lng: record.longitude, altitude: 0.35 }, 1000);
+    }
     const screen = globeRef.current?.getScreenCoords(coords.lat, coords.lng, coords.altitude ?? 0);
     if (screen) {
       setPopup({ lat: coords.lat, lng: coords.lng, x: screen.x, y: screen.y, copied: false });
@@ -301,6 +305,12 @@ function App() {
           <button className="popup-copy" onClick={handleCopyCoordinates}>
             {popup.copied ? 'Copied!' : 'Copy coordinates'}
           </button>
+        </div>
+      )}
+
+      {selected && (
+        <div className="detail-panel">
+          <RecordDetails record={selected} />
         </div>
       )}
 
