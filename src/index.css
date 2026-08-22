@@ -1,0 +1,258 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+  background: #0b0d17;
+  color: #e8eaed;
+}
+
+.sidebar {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  bottom: 1rem;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.sidebar > * {
+  pointer-events: auto;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: rgba(20, 24, 39, 0.9);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  backdrop-filter: blur(4px);
+}
+
+.controls-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.controls input,
+.controls select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid #3c4043;
+  background: #1f2937;
+  color: #e8eaed;
+  font-size: 0.95rem;
+}
+
+.controls input {
+  min-width: 10rem;
+  flex: 1;
+}
+
+.controls select {
+  flex: 1;
+  min-width: 5rem;
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.controls button:disabled {
+  background: #4b5563;
+  cursor: not-allowed;
+}
+
+.results-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: rgba(20, 24, 39, 0.9);
+  border-radius: 0.5rem;
+  backdrop-filter: blur(4px);
+  padding: 0.75rem 1rem;
+  overflow: hidden;
+}
+
+.results-header {
+  font-weight: 500;
+  color: #a5b4fc;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #3c4043;
+}
+
+.results-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.results-list li {
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  border-bottom: 1px solid #2d3748;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.results-list li:hover,
+.results-list li.selected {
+  background: rgba(37, 99, 235, 0.2);
+}
+
+.results-list li.custom {
+  border-left: 3px solid #87CEFA;
+}
+
+.results-list li.custom .result-name,
+.globe-label.custom .globe-name {
+  color: #87CEFA;
+}
+
+.result-name {
+  font-weight: 500;
+  color: #e8eaed;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-meta,
+.result-coords {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.status {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 10;
+  background: rgba(20, 24, 39, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  backdrop-filter: blur(4px);
+}
+
+.globe-label {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+.globe-label.custom .globe-name {
+  color: #87CEFA;
+}
+
+.globe-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+}
+
+.globe-name {
+  pointer-events: none;
+}
+
+.coordinate-popup {
+  position: fixed;
+  z-index: 50;
+  transform: translate(-50%, -120%);
+  background: rgba(20, 24, 39, 0.95);
+  border: 1px solid #3c4043;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 10rem;
+  pointer-events: auto;
+}
+
+.coordinate-popup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #3c4043 transparent transparent transparent;
+}
+
+.popup-close {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.35rem;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.popup-close:hover {
+  color: #e8eaed;
+}
+
+.popup-coords {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.85rem;
+  color: #e8eaed;
+  padding-right: 1rem;
+}
+
+.popup-copy {
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+canvas {
+  display: block;
+}

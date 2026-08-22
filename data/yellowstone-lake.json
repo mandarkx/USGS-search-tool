@@ -1,0 +1,32 @@
+[
+  {
+    "search": "Yellowstone Lake",
+    "rank": 1,
+    "gazId": "1577096",
+    "name": "Yellowstone Lake",
+    "featureType": "Reservoir",
+    "fcode": "39004",
+    "layerName": "Other Hydrographic Features",
+    "state": "WI",
+    "county": "Lafayette",
+    "geometryType": "esriGeometryPoint",
+    "coordinateCount": 1,
+    "latitude": 42.76407359879016,
+    "longitude": -89.97393217509402
+  },
+  {
+    "search": "Yellowstone Lake",
+    "rank": 2,
+    "gazId": "1157730",
+    "name": "Yellowstone Lake",
+    "featureType": "Lake",
+    "fcode": "39001",
+    "layerName": "Other Hydrographic Features",
+    "state": "OR",
+    "county": "Harney",
+    "geometryType": "esriGeometryPoint",
+    "coordinateCount": 1,
+    "latitude": 43.38064951367891,
+    "longitude": -119.66071542796611
+  }
+]

@@ -1,0 +1,90 @@
+search,rank,gazId,name,featureType,fcode,layerName,state,county,geometryType,coordinateCount,latitude,longitude
+Yellowstone Lake,1,1577096,Yellowstone Lake,Reservoir,39004,Other Hydrographic Features,WI,Lafayette,esriGeometryPoint,1,42.76407359879016,-89.97393217509402
+Yellowstone Lake,2,1157730,Yellowstone Lake,Lake,39001,Other Hydrographic Features,OR,Harney,esriGeometryPoint,1,43.38064951367891,-119.66071542796611
+Yellowstone,1,2413469,Town of West Yellowstone,Civil,61414,Incorporated Places (Civil),MT,Gallatin,esriGeometryMultipoint,1,44.66218951180413,-111.10703455038939
+Yellowstone,2,1825430,Township of Yellowstone,Civil,99902,Incorporated Places (Civil),OK,Woods,esriGeometryMultipoint,4,36.89170343441013,-99.01288555674927
+Yellowstone,3,1707299,Yellowstone,Populated Place,61500,Populated Places,VA,Roanoke (city),esriGeometryMultipoint,1,37.23431183515596,-79.94142898592669
+Yellowstone,4,451647,Yellowstone,Populated Place,61500,Populated Places,IN,Monroe,esriGeometryMultipoint,1,38.998946304746724,-86.34249491537179
+Yellowstone,5,2564649,Yellowstone Park,Populated Place,61500,Populated Places,NY,Westchester,esriGeometryMultipoint,1,41.04445272811645,-73.80166810281908
+Yellowstone,6,793137,West Yellowstone,Populated Place,61500,Populated Places,MT,Gallatin,esriGeometryMultipoint,1,44.662155915749416,-111.10412137950001
+Yellowstone,7,1528361,Yellowstone Cliffs,Cliff,15022,Landforms,WA,Pierce,esriGeometryMultipoint,1,46.96150104295896,-121.7667809518857
+Yellowstone,8,36474,Yellowstone Canyon,Valley,15050,Landforms,AZ,Navajo,esriGeometryMultipoint,2,34.21434409439043,-110.20202414805931
+Yellowstone,9,2833031,Yellowstone Caldera,Crater,15024,Landforms,WY,Teton,esriGeometryMultipoint,23,44.50625715559395,-110.58460204078082
+Yellowstone,10,2833031,Yellowstone Caldera,Crater,15024,Landforms,WY,Park,esriGeometryMultipoint,23,44.50625715559395,-110.58460204078082
+Yellowstone,11,1129381,Yellowstone Mountain,Summit,15048,Landforms,OR,Linn,esriGeometryMultipoint,1,44.56814482973766,-122.48297924323484
+Yellowstone,12,1591964,Yellowstone Natural Bridge,Arch,15002,Landforms,WY,Teton,esriGeometryMultipoint,1,44.52633686022571,-110.45660471654777
+Yellowstone,13,1877613,Yellowstone Plateau,Area,15004,Landforms,MT,Beaverhead,esriGeometryMultipoint,1,45.293262799389936,-113.01060629231837
+Yellowstone,14,14085,Yellowstone Canyon,Valley,15050,Landforms,AZ,Apache,esriGeometryMultipoint,2,36.38316886223335,-109.4091442878387
+Yellowstone,15,1604314,Yellowstone Point,Ridge,15044,Landforms,WY,Teton,esriGeometryMultipoint,1,44.058177952759145,-110.08515801835199
+Yellowstone,16,177505,Little Yellowstone,Valley,15050,Landforms,CO,Grand,esriGeometryMultipoint,2,40.45863112674769,-105.84177342160406
+Yellowstone,17,14087,Yellowstone Point,Summit,15048,Landforms,AZ,Coconino,esriGeometryMultipoint,1,36.294159699778376,-110.86458819973082
+Yellowstone,18,800464,Black Canyon of the Yellowstone,Valley,15050,Landforms,MT,Park,esriGeometryMultipoint,4,44.992082580575,-110.55289525402344
+Yellowstone,19,800464,Black Canyon of the Yellowstone,Valley,15050,Landforms,MT,Park,esriGeometryMultipoint,4,44.992082580575,-110.55289525402344
+Yellowstone,20,845067,Yellowstone Canyon,Valley,15050,Landforms,NV,Pershing,esriGeometryMultipoint,2,40.58225755306577,-117.82392422731542
+Yellowstone,21,1609326,Grand Canyon of the Yellowstone,Valley,15050,Landforms,WY,Park,esriGeometryMultipoint,5,44.811296367425385,-110.40510717484014
+Yellowstone,22,188673,Yellowstone Gulch,Valley,15050,Landforms,CO,Hinsdale,esriGeometryMultipoint,2,38.019482937217006,-107.4709378460694
+Yellowstone,23,14084,Yellowstone Canyon,Valley,15050,Landforms,AZ,Greenlee,esriGeometryMultipoint,2,32.872020903286355,-109.35879527608829
+Yellowstone,24,14084,Yellowstone Canyon,Valley,15050,Landforms,AZ,Graham,esriGeometryMultipoint,2,32.872020903286355,-109.35879527608829
+Yellowstone,25,14083,Yellowstone Canyon,Valley,15050,Landforms,AZ,Pima,esriGeometryMultipoint,2,31.88389495582458,-111.61565816289894
+Yellowstone,26,14086,Yellowstone Mesa,Summit,15048,Landforms,AZ,Mohave,esriGeometryMultipoint,3,36.76267214604004,-112.89683471847796
+Yellowstone,27,393764,Yellowstone Point,Cape,15018,Landforms,ID,Kootenai,esriGeometryMultipoint,1,47.7632456327412,-116.69964854065763
+Yellowstone,28,192688,South Fork Yellowstone Creek,Stream,46000,Streams (Mouth),CO,Huerfano,esriGeometryMultipoint,3,37.62732951051792,-105.13287984731333
+Yellowstone,29,1487120,Yellowstone Branch,Stream,46000,Streams (Mouth),VA,Botetourt,esriGeometryMultipoint,3,37.504957703598926,-79.63152220810946
+Yellowstone,30,1604439,North Fork Yellowstone River,Stream,46000,Streams (Mouth),WY,Park,esriGeometryMultipoint,4,43.993984329976115,-109.88977410359449
+Yellowstone,31,192687,Yellowstone Creek,Stream,46000,Streams (Mouth),CO,Huerfano,esriGeometryMultipoint,3,37.65177398171239,-105.11750867956478
+Yellowstone,32,1715802,Yellowstone Coulee,Stream,46000,Streams (Mouth),MT,Prairie,esriGeometryMultipoint,2,46.71779083697977,-105.49569923122223
+Yellowstone,33,393763,Yellowstone Canal,Canal,33600,Streams (Mouth),ID,Fremont,esriGeometryMultipoint,1,44.07603223911544,-111.30662901980051
+Yellowstone,34,798974,Clarks Fork Yellowstone River,Stream,46000,Streams (Mouth),MT,Park,esriGeometryMultipoint,19,45.114675515296874,-109.22658466758737
+Yellowstone,35,798974,Clarks Fork Yellowstone River,Stream,46000,Streams (Mouth),MT,Park,esriGeometryMultipoint,19,45.114675515296874,-109.22658466758737
+Yellowstone,36,798974,Clarks Fork Yellowstone River,Stream,46000,Streams (Mouth),MT,Carbon,esriGeometryMultipoint,19,45.114675515296874,-109.22658466758737
+Yellowstone,37,798974,Clarks Fork Yellowstone River,Stream,46000,Streams (Mouth),MT,Yellowstone,esriGeometryMultipoint,19,45.114675515296874,-109.22658466758737
+Yellowstone,38,1447567,Yellowstone Creek,Stream,46000,Streams (Mouth),UT,Duchesne,esriGeometryMultipoint,4,40.65029944086133,-110.38656061088906
+Yellowstone,39,1447570,Yellowstone River,Stream,46000,Streams (Mouth),UT,Duchesne,esriGeometryMultipoint,2,40.52120477757336,-110.35905978822822
+Yellowstone,40,14091,Yellowstone Wash,Stream,46000,Streams (Mouth),AZ,Mohave,esriGeometryMultipoint,2,36.71291474033303,-112.91108621437826
+Yellowstone,41,1434509,Yellowstone Feeder Canal,Canal,33600,Streams (Mouth),UT,Duchesne,esriGeometryMultipoint,3,40.44773643234466,-110.1876679096449
+Yellowstone,42,1412333,Yellowstone Creek,Stream,46000,Streams (Mouth),AK,Nome (CA),esriGeometryMultipoint,2,65.18930412301816,-166.3944693220717
+Yellowstone,43,1604478,South Fork Yellowstone River,Stream,46000,Streams (Mouth),WY,Park,esriGeometryMultipoint,2,43.97954015373823,-109.88421794990036
+Yellowstone,44,1434508,Yellowstone Extension Canal,Canal,33600,Streams (Mouth),UT,Duchesne,esriGeometryMultipoint,1,40.46940313884833,-110.13238983429484
+Yellowstone,45,778735,Yellowstone Canal,Canal,33600,Streams (Mouth),MT,Rosebud,esriGeometryMultipoint,5,46.27333009008301,-107.03650856423046
+Yellowstone,46,778735,Yellowstone Canal,Canal,33600,Streams (Mouth),MT,Treasure,esriGeometryMultipoint,5,46.27333009008301,-107.03650856423046
+Yellowstone,47,1100054,Yellowstone Creek,Stream,46000,Streams (Mouth),OK,Woods,esriGeometryMultipoint,3,36.973091311081355,-98.92899350169716
+Yellowstone,48,1100054,Yellowstone Creek,Stream,46000,Streams (Mouth),OK,Barber,esriGeometryMultipoint,3,36.973091311081355,-98.92899350169716
+Yellowstone,49,1577097,Yellowstone River,Stream,46000,Streams (Mouth),WI,Lafayette,esriGeometryMultipoint,3,42.77787973575926,-89.95651962508875
+Yellowstone,50,1577097,Yellowstone River,Stream,46000,Streams (Mouth),WI,Iowa,esriGeometryMultipoint,3,42.77787973575926,-89.95651962508875
+Yellowstone,51,1016874,Yellowstone Prong,Stream,46000,Streams (Mouth),NC,Haywood,esriGeometryMultipoint,2,35.32547762649344,-82.85173529249826
+Yellowstone,52,1129379,Yellowstone Creek,Stream,46000,Streams (Mouth),OR,Linn,esriGeometryMultipoint,2,44.56423378147895,-122.4428328042047
+Yellowstone,53,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Teton,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,54,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Park,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,55,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Park,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,56,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Sweet Grass,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,57,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Stillwater,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,58,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Carbon,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,59,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Yellowstone,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,60,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Treasure,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,61,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Rosebud,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,62,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Custer,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,63,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Prairie,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,64,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Wibaux,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,65,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Dawson,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,66,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,Richland,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,67,1035255,Yellowstone River,Stream,46000,Streams (Mouth),ND,McKenzie,esriGeometryMultipoint,106,45.94700823724225,-107.9331359317483
+Yellowstone,68,777701,Tongue and Yellowstone River Irrigation District Canal,Canal,33600,Streams (Mouth),MT,Custer,esriGeometryMultipoint,4,46.443899308464296,-105.76056694275131
+Yellowstone,69,14089,Yellowstone Spring,Spring,45800,Other Hydrographic Features,AZ,Mohave,esriGeometryPoint,1,36.730824290557095,-112.94299817224552
+Yellowstone,70,36475,Yellowstone Tank,Reservoir,39001,Other Hydrographic Features,AZ,Greenlee,esriGeometryPoint,1,33.30306420097285,-109.21822087542866
+Yellowstone,71,1454957,Yellowstone Spring,Spring,45800,Other Hydrographic Features,UT,Morgan,esriGeometryPoint,1,41.13717302108153,-111.35826287887623
+Yellowstone,72,1447870,Yellowstone Power Diversion Reservoir,Reservoir,39000,Other Hydrographic Features,UT,Duchesne,esriGeometryPoint,1,40.57573553910396,-110.32701180072327
+Yellowstone,73,36476,Yellowstone Tank,Reservoir,39001,Other Hydrographic Features,AZ,Navajo,esriGeometryPoint,1,34.21342612734667,-110.21308604244298
+Yellowstone,74,913104,Yellowstone Spring,Spring,45800,Other Hydrographic Features,NM,Torrance,esriGeometryPoint,1,34.781499752484436,-106.41572039526253
+Yellowstone,75,1016873,Yellowstone Falls,Falls,48700,Other Hydrographic Features,NC,Haywood,esriGeometryPoint,1,35.323725827007195,-82.8409670389655
+Yellowstone,76,14088,Yellowstone Spring,Spring,45800,Other Hydrographic Features,AZ,Mohave,esriGeometryPoint,1,36.49911902283727,-113.70937526301422
+Yellowstone,77,851563,Yellowstone Spring,Spring,45800,Other Hydrographic Features,NV,Clark,esriGeometryPoint,1,35.284372280694065,-114.7582042108291
+Yellowstone,78,1577096,Yellowstone Lake,Reservoir,39004,Other Hydrographic Features,WI,Lafayette,esriGeometryPoint,1,42.76407359879016,-89.97393217509402
+Yellowstone,79,846007,Yellowstone Spring,Spring,45800,Other Hydrographic Features,NV,Pershing,esriGeometryPoint,1,40.58557141489681,-117.82335035880823
+Yellowstone,80,1595859,Upper Falls of the Yellowstone River,Falls,48700,Other Hydrographic Features,WY,Park,esriGeometryPoint,1,44.71281483319879,-110.49985861095288
+Yellowstone,81,37603,Yellowstone Tank,Reservoir,39001,Other Hydrographic Features,AZ,Pima,esriGeometryPoint,1,32.28979930858093,-110.63408515738712
+Yellowstone,82,201209,Yellowstone Reservoir,Reservoir,43600,Other Hydrographic Features,CO,Huerfano,esriGeometryPoint,1,37.61334830894473,-105.12723171122455
+Yellowstone,83,1609116,Lower Falls of the Yellowstone River,Falls,48700,Other Hydrographic Features,WY,Park,esriGeometryPoint,1,44.71798203437053,-110.4964373008365
+Yellowstone,84,14090,Yellowstone Tank,Reservoir,39001,Other Hydrographic Features,AZ,Graham,esriGeometryPoint,1,32.86707337367959,-109.35704492313025
+Yellowstone,85,1157730,Yellowstone Lake,Lake,39001,Other Hydrographic Features,OR,Harney,esriGeometryPoint,1,43.38064951367891,-119.66071542796611
+Yellowstone,86,1577897,Yellowstone (historical),Populated Place,61500,Historical Cultural-Political Points,WI,Lafayette,esriGeometryMultipoint,1,42.79834217117907,-89.97040883163274
+Yellowstone,87,1940750,Yellowstone National Park Division (historical),Census,99901,Historical Cultural-Political Points,MT,Park,esriGeometryMultipoint,1,45.00355187722349,-110.80161497599393
