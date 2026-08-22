@@ -5,7 +5,16 @@ export interface DataSource {
   name: string;
   featureType?: string;
   placeholder?: string;
+  needsQuery?: boolean;
   fetch: (query: string, maxRecords?: number) => Promise<GeoRecord[]>;
+}
+
+export interface DataSet {
+  id: string;
+  name: string;
+  sourceId: string;
+  query: string;
+  description?: string;
 }
 
 function buildPointRecord(
@@ -57,7 +66,9 @@ function filterByQuery(records: GeoRecord[], query: string): GeoRecord[] {
 export const GEO_NAMES_SOURCE: DataSource = {
   id: 'geonames',
   name: 'GeoNames (National Map)',
+  featureType: 'GeoNames',
   placeholder: 'Search GeoNames...',
+  needsQuery: true,
   fetch: findLocations,
 };
 
@@ -222,6 +233,37 @@ export const DATA_SOURCES: DataSource[] = [
   USGS_EARTHQUAKE_SOURCE,
   USGS_WATER_SOURCE,
   GBIF_SOURCE,
+];
+
+export const DATA_SETS: DataSet[] = [
+  {
+    id: 'yellowstone',
+    name: 'Yellowstone',
+    sourceId: 'geonames',
+    query: 'Yellowstone',
+    description: 'National Park features from GeoNames',
+  },
+  {
+    id: 'earthquakes',
+    name: 'USGS Earthquakes',
+    sourceId: 'earthquakes',
+    query: '',
+    description: 'Earthquakes from the past 30 days',
+  },
+  {
+    id: 'water',
+    name: 'USGS Water',
+    sourceId: 'water',
+    query: '',
+    description: 'Active USGS stream sites',
+  },
+  {
+    id: 'gbif',
+    name: 'GBIF-US',
+    sourceId: 'gbif',
+    query: '',
+    description: 'Species occurrence records in the US',
+  },
 ];
 
 export function getSourceById(id: string): DataSource | undefined {

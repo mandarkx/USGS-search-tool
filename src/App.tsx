@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
+import { useMemo, useRef, useState, useCallback } from 'react';
 import { loadCustomLocations, type GeoRecord } from './lib/geonames';
-import { DATA_SOURCES, getSourceById, type DataSource } from './lib/sources';
+import { DATA_SETS, DATA_SOURCES, getSourceById, type DataSet, type DataSource } from './lib/sources';
 import GlobeMap from './components/GlobeMap';
 import ResultsList from './components/ResultsList';
 import useWindowSize from './hooks/useWindowSize';
@@ -18,7 +18,8 @@ interface PopupState {
 
 function App() {
   const [source, setSource] = useState<DataSource>(DATA_SOURCES[0]);
-  const [query, setQuery] = useState('Yellowstone');
+  const [query, setQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<'filter' | 'datasets'>('datasets');
   const [stateFilter, setStateFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [results, setResults] = useState<GeoRecord[]>([]);
@@ -97,12 +98,19 @@ function App() {
     globeRef.current?.pointOfView(CONTINENTAL_US_VIEW, 1000);
   }, []);
 
-  async function handleSearch(overrideQuery?: string) {
-    const searchText = overrideQuery ?? query;
+  async function runSearch(searchSource: DataSource, searchQuery: string) {
+    if (searchSource.needsQuery && !searchQuery.trim()) {
+      setResults([]);
+      setSelected(null);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
-      const data = await source.fetch(searchText, 100);
+      const data = await searchSource.fetch(searchQuery, 100);
       setResults(data);
       setSelected(null);
     } catch (err) {
@@ -110,6 +118,10 @@ function App() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSearch(overrideQuery = query) {
+    runSearch(source, overrideQuery);
   }
 
   async function handleLoadCustomUrl() {
@@ -128,105 +140,145 @@ function App() {
     }
   }
 
+  function handleDataSetClick(dataSet: DataSet) {
+    const nextSource = getSourceById(dataSet.sourceId);
+    if (!nextSource) return;
+    setActiveTab('filter');
+    setSource(nextSource);
+    setQuery(dataSet.query);
+    setStateFilter('');
+    setTypeFilter('');
+    setSelected(null);
+    setPopup(null);
+    setError(null);
+    setShowCustomUrl(false);
+    runSearch(nextSource, dataSet.query);
+  }
+
   function handleReset() {
     const defaultSource = DATA_SOURCES[0];
     setSource(defaultSource);
-    setQuery('Yellowstone');
+    setQuery('');
     setStateFilter('');
     setTypeFilter('');
+    setActiveTab('datasets');
+    setResults([]);
     setCustomResults([]);
     setCustomUrl('');
     setShowCustomUrl(false);
     setSelected(null);
     setPopup(null);
     setError(null);
-    setLoading(true);
+    setLoading(false);
     globeRef.current?.pointOfView(CONTINENTAL_US_VIEW, 1000);
-    defaultSource
-      .fetch('Yellowstone', 100)
-      .then((data) => setResults(data))
-      .catch((err) => setError(err instanceof Error ? err.message : 'Unknown error'))
-      .finally(() => setLoading(false));
   }
-
-  useEffect(() => {
-    handleSearch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <aside className="sidebar">
-        <div className="controls">
-          <div className="controls-row">
-            <select
-              value={source.id}
-              onChange={(e) => {
-                const next = getSourceById(e.target.value);
-                if (next) {
-                  setSource(next);
-                  setQuery('');
-                  setSelected(null);
-                }
-              }}
-            >
-              {DATA_SOURCES.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-            <button onClick={() => handleSearch()} disabled={loading}>
-              {loading ? 'Searching...' : 'Search'}
-            </button>
-            <button onClick={handleReset} disabled={loading}>
-              Reset
-            </button>
-            <button onClick={() => setShowCustomUrl((s) => !s)} disabled={loading}>
-              {showCustomUrl ? 'Cancel' : 'Add API URL'}
-            </button>
-          </div>
-          <div className="controls-row">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              placeholder={source.placeholder || 'Search...'}
-            />
-            <select value={stateFilter} onChange={(e) => setStateFilter(e.target.value)}>
-              <option value="">All states</option>
-              {stateOptions.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
-            <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-              <option value="">All types</option>
-              {typeOptions.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          </div>
-          {showCustomUrl && (
-            <div className="controls-row url-row">
-              <input
-                type="text"
-                value={customUrl}
-                onChange={(e) => setCustomUrl(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleLoadCustomUrl()}
-                placeholder="https://..."
-              />
-              <button onClick={handleLoadCustomUrl} disabled={loading}>
-                Load
+        <div className="tab-bar">
+          <button
+            type="button"
+            className={activeTab === 'filter' ? 'active' : ''}
+            onClick={() => setActiveTab('filter')}
+          >
+            Filter
+          </button>
+          <button
+            type="button"
+            className={activeTab === 'datasets' ? 'active' : ''}
+            onClick={() => setActiveTab('datasets')}
+          >
+            Data Sets
+          </button>
+        </div>
+        {activeTab === 'filter' && (
+          <div className="controls">
+            <div className="controls-row">
+              <select
+                value={source.id}
+                onChange={(e) => {
+                  const next = getSourceById(e.target.value);
+                  if (next) {
+                    setSource(next);
+                    setQuery('');
+                    setSelected(null);
+                  }
+                }}
+              >
+                {DATA_SOURCES.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+              <button onClick={() => handleSearch()} disabled={loading}>
+                {loading ? 'Searching...' : 'Search'}
+              </button>
+              <button onClick={handleReset} disabled={loading}>
+                Reset
+              </button>
+              <button onClick={() => setShowCustomUrl((s) => !s)} disabled={loading}>
+                {showCustomUrl ? 'Cancel' : 'Add API URL'}
               </button>
             </div>
-          )}
-        </div>
-        <ResultsList data={filtered} selectedId={selected?.gazId} onSelect={handleSelect} />
+            <div className="controls-row">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                placeholder={source.placeholder || 'Search...'}
+              />
+              <select value={stateFilter} onChange={(e) => setStateFilter(e.target.value)}>
+                <option value="">All states</option>
+                {stateOptions.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </select>
+              <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+                <option value="">All types</option>
+                {typeOptions.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {showCustomUrl && (
+              <div className="controls-row url-row">
+                <input
+                  type="text"
+                  value={customUrl}
+                  onChange={(e) => setCustomUrl(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLoadCustomUrl()}
+                  placeholder="https://..."
+                />
+                <button onClick={handleLoadCustomUrl} disabled={loading}>
+                  Load
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+        {activeTab === 'filter' ? (
+          <ResultsList data={filtered} selectedId={selected?.gazId} onSelect={handleSelect} />
+        ) : (
+          <div className="data-sets-list">
+            {DATA_SETS.map((dataSet) => (
+              <div
+                key={dataSet.id}
+                className="result-item"
+                onClick={() => handleDataSetClick(dataSet)}
+              >
+                <div className="result-name">{dataSet.name}</div>
+                <div className="result-meta">{dataSet.description}</div>
+              </div>
+            ))}
+          </div>
+        )}
       </aside>
 
       <GlobeMap
@@ -253,7 +305,11 @@ function App() {
       )}
 
       <div className="status">
-        {error ? `Error: ${error}` : `${filtered.length} of ${allResults.length} results${stateFilter ? ` in ${stateFilter}` : ''}${typeFilter ? `, type ${typeFilter}` : ''}`}
+        {activeTab === 'datasets'
+          ? 'Select a data set to load'
+          : error
+            ? `Error: ${error}`
+            : `${filtered.length} of ${allResults.length} results${stateFilter ? ` in ${stateFilter}` : ''}${typeFilter ? `, type ${typeFilter}` : ''}`}
       </div>
     </div>
   );
