@@ -1,4 +1,4 @@
-import { findLocations, type GeoRecord } from './geonames';
+import { findLocations, fetchMapServerLayers, type GeoRecord } from './geonames';
 
 export interface DataSource {
   id: string;
@@ -217,11 +217,27 @@ export const GBIF_SOURCE: DataSource = {
   fetch: fetchGbif,
 };
 
+async function fetchHydro(query: string, maxRecords = 100): Promise<GeoRecord[]> {
+  const records = await fetchMapServerLayers('https://basemap.nationalmap.gov/arcgis/rest/services/USGSHydroCached/MapServer');
+  if (!query.trim()) return records.slice(0, maxRecords);
+  const q = query.toLowerCase();
+  return records.filter(r => r.name.toLowerCase().includes(q)).slice(0, maxRecords);
+}
+
+export const USGS_HYDRO_SOURCE: DataSource = {
+  id: 'hydro',
+  name: 'USGS Hydro',
+  featureType: 'Layer',
+  placeholder: 'Search layers...',
+  fetch: fetchHydro,
+};
+
 export const DATA_SOURCES: DataSource[] = [
   GEO_NAMES_SOURCE,
   USGS_EARTHQUAKE_SOURCE,
   USGS_WATER_SOURCE,
   GBIF_SOURCE,
+  USGS_HYDRO_SOURCE,
 ];
 
 export function getSourceById(id: string): DataSource | undefined {

@@ -319,27 +319,108 @@ export async function loadCustomLocations(url: string): Promise<GeoRecord[]> {
   throw new Error('Custom API response must be an array of records, a GeoJSON FeatureCollection, or an object with a "results" array.');
 }
 
-export function buildFindUrl(searchText: string, maxRecords = 100): string {
-  const base = 'https://carto.nationalmap.gov/arcgis/rest/services/geonames/MapServer/find';
+export function buildFindUrl(
+  searchText: string,
+  maxRecords = 100,
+  baseUrl = 'https://carto.nationalmap.gov/arcgis/rest/services/geonames/MapServer/find',
+  layers = '1,2,3,5,6,7,8,10,12,13,14',
+  searchFields = 'gaz_name'
+): string {
   const params = new URLSearchParams({
     searchText,
     contains: 'true',
-    searchFields: 'gaz_name',
-    layers: '1,2,3,5,6,7,8,10,12,13,14',
     sr: '4326',
     returnGeometry: 'true',
     maxRecords: String(maxRecords),
     f: 'json',
   });
-  return `${base}?${params.toString()}`;
+  if (layers) params.set('layers', layers);
+  if (searchFields) params.set('searchFields', searchFields);
+  return `${baseUrl}?${params.toString()}`;
 }
 
-export async function findLocations(searchText: string, maxRecords = 100): Promise<GeoRecord[]> {
-  const url = buildFindUrl(searchText, maxRecords);
+export async function findLocations(
+  searchText: string,
+  maxRecords = 100,
+  baseUrl?: string,
+  layers?: string,
+  searchFields?: string
+): Promise<GeoRecord[]> {
+  const url = buildFindUrl(searchText, maxRecords, baseUrl, layers, searchFields);
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`GeoNames request failed: ${response.status} ${response.statusText}`);
+    throw new Error(`ArcGIS request failed: ${response.status} ${response.statusText}`);
   }
   const data: ArcGisFindResponse = await response.json();
   return extractRecords(data, searchText);
+}
+
+export async function fetchMapServerLayers(baseUrl: string): Promise<GeoRecord[]> {
+  const url = `${baseUrl}/layers?f=json`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`MapServer layers request failed: ${response.status} ${response.statusText}`);
+  }
+  const data = await response.json();
+  if (!data.layers || !Array.isArray(data.layers)) return [];
+
+  return data.layers.map((layer: any, index: number) => {
+    let xmin = layer.extent?.xmin ?? -180;
+    let ymin = layer.extent?.ymin ?? -90;
+    let xmax = layer.extent?.xmax ?? 180;
+    let ymax = layer.extent?.ymax ?? 90;
+
+    const wkid = layer.extent?.spatialReference?.wkid;
+    if (wkid === 102100 || wkid === 3857) {
+      // Valid Web Mercator bounds are approximately ±20,037,508.34 meters.
+      // Cached raster services often report overly large bounds that will fail geographic conversion.
+      const WEB_MERCATOR_HALF_WORLD = 20037508.342789244;
+      const clamp = (val: number) => Math.max(-WEB_MERCATOR_HALF_WORLD, Math.min(WEB_MERCATOR_HALF_WORLD, val));
+
+      xmin = clamp(xmin);
+      xmax = clamp(xmax);
+      ymin = clamp(ymin);
+      ymax = clamp(ymax);
+
+      const toLng = (x: number) => (x / WEB_MERCATOR_HALF_WORLD) * 180;
+      const toLat = (y: number) => {
+        const lat = (y / WEB_MERCATOR_HALF_WORLD) * 180;
+        return (180 / Math.PI) * (2 * Math.atan(Math.exp((lat * Math.PI) / 180)) - Math.PI / 2);
+      };
+      
+      xmin = toLng(xmin);
+      xmax = toLng(xmax);
+      ymin = toLat(ymin);
+      ymax = toLat(ymax);
+    }
+
+    const coords = [
+      [xmin, ymin],
+      [xmax, ymin],
+      [xmax, ymax],
+      [xmin, ymax],
+      [xmin, ymin],
+    ];
+
+    const lat = (ymin + ymax) / 2;
+    const lng = (xmin + xmax) / 2;
+
+    return {
+      search: baseUrl,
+      rank: index + 1,
+      gazId: `layer-${layer.id}`,
+      name: layer.name || `Layer ${layer.id}`,
+      featureType: layer.type || 'Layer',
+      fcode: '',
+      layerName: layer.name,
+      state: '',
+      county: '',
+      geometryType: 'Polygon',
+      coordinateCount: 5,
+      latitude: lat,
+      longitude: lng,
+      geojson: { type: 'Polygon', coordinates: [coords] },
+      isCustom: true
+    } as GeoRecord;
+  });
 }

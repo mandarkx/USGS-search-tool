@@ -5,6 +5,7 @@ import GlobeMap from './components/GlobeMap';
 import ResultsList from './components/ResultsList';
 import useWindowSize from './hooks/useWindowSize';
 import type { GlobeMethods } from 'react-globe.gl';
+import TopAppBar from './components/TopAppBar';
 
 const CONTINENTAL_US_VIEW = { lat: 39.5, lng: -98.5, altitude: 2.0 };
 
@@ -18,7 +19,7 @@ interface PopupState {
 
 function App() {
   const [source, setSource] = useState<DataSource>(DATA_SOURCES[0]);
-  const [query, setQuery] = useState('Yellowstone');
+  const [query, setQuery] = useState('');
   const [stateFilter, setStateFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [results, setResults] = useState<GeoRecord[]>([]);
@@ -61,7 +62,11 @@ function App() {
   const handleSelect = useCallback((record: GeoRecord) => {
     setSelected(record);
     if (record.latitude !== undefined && record.longitude !== undefined) {
-      globeRef.current?.pointOfView({ lat: record.latitude, lng: record.longitude, altitude: 0.35 }, 1000);
+      let altitude = 0.35;
+      if (record.featureType === 'Raster Layer' || record.featureType === 'Layer') {
+        altitude = 1.0; 
+      }
+      globeRef.current?.pointOfView({ lat: record.latitude, lng: record.longitude, altitude }, 1000);
     }
   }, []);
 
@@ -131,7 +136,7 @@ function App() {
   function handleReset() {
     const defaultSource = DATA_SOURCES[0];
     setSource(defaultSource);
-    setQuery('Yellowstone');
+    setQuery('');
     setStateFilter('');
     setTypeFilter('');
     setCustomResults([]);
@@ -143,7 +148,7 @@ function App() {
     setLoading(true);
     globeRef.current?.pointOfView(CONTINENTAL_US_VIEW, 1000);
     defaultSource
-      .fetch('Yellowstone', 100)
+      .fetch('', 100)
       .then((data) => setResults(data))
       .catch((err) => setError(err instanceof Error ? err.message : 'Unknown error'))
       .finally(() => setLoading(false));
@@ -155,7 +160,9 @@ function App() {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <TopAppBar />
+      <div style={{ flex: 1, position: 'relative' }}>
       <aside className="sidebar">
         <div className="controls">
           <div className="controls-row">
@@ -254,6 +261,7 @@ function App() {
 
       <div className="status">
         {error ? `Error: ${error}` : `${filtered.length} of ${allResults.length} results${stateFilter ? ` in ${stateFilter}` : ''}${typeFilter ? `, type ${typeFilter}` : ''}`}
+      </div>
       </div>
     </div>
   );
