@@ -1,0 +1,152 @@
+:root {
+  --app-bar-bg: #e0f7fa;
+  --app-bar-text: #1f2937;
+  --app-bar-border: #b2ebf2;
+  --app-bar-hover: rgba(0, 0, 0, 0.05);
+  --app-bar-active-bg: rgba(255, 105, 180, 0.2);
+  --app-bar-active-text: #e91e63;
+  --app-bar-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.app-bar {
+  background-color: var(--app-bar-bg);
+  color: var(--app-bar-text);
+  border-bottom: 1px solid var(--app-bar-border);
+  box-shadow: var(--app-bar-shadow);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  font-family: system-ui, -apple-system, sans-serif;
+  backdrop-filter: blur(4px);
+  background: rgba(224, 247, 250, 0.9);
+}
+
+.app-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.5rem;
+}
+
+.app-bar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.app-bar-default-logo {
+  display: block;
+}
+
+.app-bar-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: pink;
+}
+
+.app-bar-nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.5rem;
+}
+
+.app-bar-nav a {
+  text-decoration: none;
+  color: var(--app-bar-text);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.app-bar-nav a:hover {
+  background-color: var(--app-bar-hover);
+}
+
+.app-bar-nav a.active {
+  color: var(--app-bar-active-text);
+  background-color: var(--app-bar-active-bg);
+}
+
+.app-bar-actions {
+  display: flex;
+  align-items: center;
+}
+
+.app-bar-button {
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.app-bar-button:hover {
+  background-color: #ff1493;
+}
+
+.app-bar-button:active {
+  transform: scale(0.98);
+}
+
+.app-bar-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--app-bar-text);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.app-bar-mobile-toggle:hover {
+  background-color: var(--app-bar-hover);
+}
+
+@media (max-width: 768px) {
+  .app-bar-mobile-toggle {
+    display: block;
+    order: 1;
+  }
+
+  .app-bar-actions {
+    display: none;
+  }
+
+  .app-bar-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--app-bar-bg);
+    border-bottom: 1px solid var(--app-bar-border);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    padding: 1rem 0;
+  }
+
+  .app-bar-nav.open {
+    display: block;
+  }
+
+  .app-bar-nav ul {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0 1rem;
+  }
+
+  .app-bar-nav a {
+    display: block;
+    padding: 0.75rem 1rem;
+  }
+}

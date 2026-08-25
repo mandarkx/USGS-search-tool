@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { loadCustomLocations, type GeoRecord } from './lib/geonames';
 import { DATA_SOURCES, getSourceById, type DataSource } from './lib/sources';
 import GlobeMap from './components/GlobeMap';
+import AppBar from './components/AppBar';
 import ResultsList from './components/ResultsList';
 import useWindowSize from './hooks/useWindowSize';
 import type { GlobeMethods } from 'react-globe.gl';
@@ -160,9 +161,8 @@ function App() {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TopAppBar />
-      <div style={{ flex: 1, position: 'relative' }}>
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      <AppBar title="USGS Area Locator" />
       <aside className="sidebar">
         <div className="controls">
           <div className="controls-row">
