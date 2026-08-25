@@ -1,11 +1,11 @@
 :root {
-  --app-bar-bg: #141827;
-  --app-bar-text: #e8eaed;
-  --app-bar-border: #3c4043;
-  --app-bar-hover: rgba(255, 255, 255, 0.1);
+  --app-bar-bg: #e0f7fa;
+  --app-bar-text: #1f2937;
+  --app-bar-border: #b2ebf2;
+  --app-bar-hover: rgba(0, 0, 0, 0.05);
   --app-bar-active-bg: rgba(255, 105, 180, 0.2);
-  --app-bar-active-text: #ff69b4;
-  --app-bar-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --app-bar-active-text: #e91e63;
+  --app-bar-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .app-bar {
@@ -20,7 +20,7 @@
   z-index: 1000;
   font-family: system-ui, -apple-system, sans-serif;
   backdrop-filter: blur(4px);
-  background: rgba(20, 24, 39, 0.9);
+  background: rgba(224, 247, 250, 0.9);
 }
 
 .app-bar-container {
