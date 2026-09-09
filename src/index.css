@@ -332,7 +332,7 @@ canvas {
   overflow: auto;
   background: rgba(20, 24, 39, 0.95);
   border-top: 1px solid #3c4043;
-  z-index: 25;
+  z-index: 5;
 }
 
 .results-grid {

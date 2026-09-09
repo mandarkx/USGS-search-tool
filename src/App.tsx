@@ -384,7 +384,7 @@ function App() {
         </div>
       )}
 
-      {selected && (
+      {selected && !source.isLocal && (
         <div className="detail-panel">
           <RecordDetails record={selected} />
         </div>
