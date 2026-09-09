@@ -1,8 +1,9 @@
 import { useMemo, useRef, useState, useCallback } from 'react';
 import { loadCustomFile, loadCustomLocations, type GeoRecord } from './lib/geonames';
-import { DATA_SETS, DATA_SOURCES, getSourceById, type DataSet, type DataSource } from './lib/sources';
+import { DATA_SETS, DATA_SOURCES, GDB_SOURCE, getSourceById, type DataSet, type DataSource } from './lib/sources';
 import GlobeMap from './components/GlobeMap';
 import RecordDetails from './components/RecordDetails';
+import ResultsGrid from './components/ResultsGrid';
 import ResultsList from './components/ResultsList';
 import useWindowSize from './hooks/useWindowSize';
 import type { GlobeMethods } from 'react-globe.gl';
@@ -56,10 +57,21 @@ function App() {
 
   const filtered = useMemo(() => {
     let r = allResults;
+    if (source.isLocal && query.trim()) {
+      const q = query.toLowerCase();
+      r = r.filter(
+        (x) =>
+          x.name.toLowerCase().includes(q) ||
+          x.state.toLowerCase().includes(q) ||
+          x.county.toLowerCase().includes(q) ||
+          x.featureType.toLowerCase().includes(q) ||
+          (x.layerName && x.layerName.toLowerCase().includes(q))
+      );
+    }
     if (stateFilter) r = r.filter((x) => x.state === stateFilter);
     if (typeFilter) r = r.filter((x) => x.featureType === typeFilter);
     return r;
-  }, [allResults, stateFilter, typeFilter]);
+  }, [allResults, query, source, stateFilter, typeFilter]);
 
   const handleSelect = useCallback((record: GeoRecord) => {
     setSelected(record);
@@ -104,6 +116,9 @@ function App() {
   }, []);
 
   async function runSearch(searchSource: DataSource, searchQuery: string): Promise<GeoRecord[]> {
+    if (searchSource.isLocal) {
+      return results;
+    }
     if (searchSource.needsQuery && !searchQuery.trim()) {
       setResults([]);
       setSelected(null);
@@ -128,6 +143,9 @@ function App() {
   }
 
   function handleSearch(overrideQuery = query) {
+    if (source.isLocal) {
+      return;
+    }
     runSearch(source, overrideQuery);
   }
 
@@ -153,10 +171,18 @@ function App() {
     try {
       const data = await loadCustomFile(file);
       setActiveTab('filter');
-      setCustomResults(data);
-      setSelected(data[0] ?? null);
-      if (data[0] && data[0].latitude !== undefined && data[0].longitude !== undefined) {
-        globeRef.current?.pointOfView({ lat: data[0].latitude, lng: data[0].longitude, altitude: 0.35 }, 1000);
+      setSource(GDB_SOURCE);
+      setQuery('');
+      setStateFilter('');
+      setTypeFilter('');
+      setResults(data);
+      setCustomResults([]);
+      const first = data.find((r) => r.latitude !== undefined && r.longitude !== undefined) ?? data[0] ?? null;
+      setSelected(first);
+      if (first && first.latitude !== undefined && first.longitude !== undefined) {
+        globeRef.current?.pointOfView({ lat: first.latitude, lng: first.longitude, altitude: 0.35 }, 1000);
+      } else {
+        globeRef.current?.pointOfView(CONTINENTAL_US_VIEW, 1000);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -166,6 +192,10 @@ function App() {
   }
 
   async function handleDataSetClick(dataSet: DataSet) {
+    if (dataSet.sourceId === 'gdb') {
+      fileInputRef.current?.click();
+      return;
+    }
     const nextSource = getSourceById(dataSet.sourceId);
     if (!nextSource) return;
     setActiveTab('filter');
@@ -256,7 +286,7 @@ function App() {
                 {showCustomUrl ? 'Cancel' : 'Add API URL'}
               </button>
               <button onClick={() => fileInputRef.current?.click()} disabled={loading}>
-                Load File
+                Select .gdb Dataset
               </button>
               <input
                 ref={fileInputRef}
@@ -358,6 +388,10 @@ function App() {
         <div className="detail-panel">
           <RecordDetails record={selected} />
         </div>
+      )}
+
+      {activeTab === 'filter' && source.id === 'gdb' && filtered.length > 0 && (
+        <ResultsGrid data={filtered} selectedId={selected?.gazId} onSelect={handleSelect} />
       )}
 
       <div className="status">

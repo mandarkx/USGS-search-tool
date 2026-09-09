@@ -1,0 +1,59 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "p1",
+        "name": "Old Faithful",
+        "featureType": "Geyser",
+        "state": "WY",
+        "county": "Teton",
+        "permanent_identifier": "71701743",
+        "streamlevel": 1,
+        "streamorder": 2,
+        "fromnode": 100
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-110.8313, 44.4605]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "p2",
+        "name": "Grand Prismatic Spring",
+        "featureType": "Spring",
+        "state": "WY",
+        "county": "Teton",
+        "permanent_identifier": "79496210",
+        "streamlevel": 1,
+        "streamorder": 2,
+        "fromnode": 101
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-110.8363, 44.525]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "p3",
+        "name": "Yellowstone Lake",
+        "featureType": "Lake",
+        "state": "WY",
+        "county": "Teton",
+        "permanent_identifier": "88991951",
+        "streamlevel": 0,
+        "streamorder": 1,
+        "fromnode": 102
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-110.35, 44.4]
+      }
+    }
+  ]
+}

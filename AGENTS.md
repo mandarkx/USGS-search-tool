@@ -21,9 +21,11 @@ python scripts/convert-gdb.py "path/to/data.gdb" "output.geojson"
 ```
 
 Then in the app:
-1. Switch to the **Filter** tab.
-2. Click **Load File**.
-3. Choose `output.geojson` (or any `.geojson`, `.json`, or `.csv` file).
+1. Go to **Data Sets** tab and click **GeoDatabase**, or click **Select .gdb Dataset** in the Filter tab.
+2. Choose `output.geojson` (or any `.geojson`, `.json`, or `.csv` file).
+3. The records appear on the map, in the sidebar list, and in the bottom attribute grid.
+4. Type in the search box to filter the loaded dataset; use state and type filters too.
+5. Click any row in the bottom grid to zoom to that record.
 
 ## Supported custom file formats
 

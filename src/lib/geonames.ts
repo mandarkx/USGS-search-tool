@@ -71,6 +71,7 @@ export interface GeoRecord {
   longitude: number | undefined;
   geojson?: GeoJSONGeometry;
   isCustom?: boolean;
+  attributes?: Record<string, unknown>;
 }
 
 export interface CustomRecordInput {
@@ -185,6 +186,7 @@ function geoJsonFeatureToRecord(feature: unknown, index: number, search = 'Custo
     longitude: lng,
     geojson: f.geometry as GeoJSONGeometry,
     isCustom: true,
+    attributes: props,
   };
 }
 
@@ -223,6 +225,7 @@ export function normalizeCustomRecord(input: CustomRecordInput, index: number, s
     longitude: toNumber(lngValue),
     geojson,
     isCustom: true,
+    attributes: { ...input },
   };
 }
 
@@ -323,6 +326,7 @@ export function extractRecords(data: ArcGisFindResponse, searchText: string): Ge
       latitude: centroid ? centroid.lat : undefined,
       longitude: centroid ? centroid.lng : undefined,
       geojson,
+      attributes: attrs,
     };
   });
 }

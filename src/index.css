@@ -322,3 +322,50 @@ body,
 canvas {
   display: block;
 }
+
+.results-grid-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow: auto;
+  background: rgba(20, 24, 39, 0.95);
+  border-top: 1px solid #3c4043;
+  z-index: 25;
+}
+
+.results-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  color: #e8eaed;
+  white-space: nowrap;
+}
+
+.results-grid th,
+.results-grid td {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #2d3748;
+  text-align: left;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.results-grid th {
+  background: #1f2937;
+  font-weight: 500;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.results-grid tbody tr {
+  cursor: pointer;
+}
+
+.results-grid tbody tr:hover,
+.results-grid tbody tr.selected {
+  background: rgba(37, 99, 235, 0.25);
+}

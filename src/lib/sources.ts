@@ -6,6 +6,7 @@ export interface DataSource {
   featureType?: string;
   placeholder?: string;
   needsQuery?: boolean;
+  isLocal?: boolean;
   fetch: (query: string, maxRecords?: number) => Promise<GeoRecord[]>;
 }
 
@@ -228,11 +229,22 @@ export const GBIF_SOURCE: DataSource = {
   fetch: fetchGbif,
 };
 
+export const GDB_SOURCE: DataSource = {
+  id: 'gdb',
+  name: 'GeoDatabase',
+  featureType: 'GeoDatabase',
+  placeholder: 'Filter loaded dataset...',
+  needsQuery: false,
+  isLocal: true,
+  fetch: async () => [],
+};
+
 export const DATA_SOURCES: DataSource[] = [
   GEO_NAMES_SOURCE,
   USGS_EARTHQUAKE_SOURCE,
   USGS_WATER_SOURCE,
   GBIF_SOURCE,
+  GDB_SOURCE,
 ];
 
 export const DATA_SETS: DataSet[] = [
@@ -263,6 +275,13 @@ export const DATA_SETS: DataSet[] = [
     sourceId: 'gbif',
     query: '',
     description: 'Species occurrence records in the US',
+  },
+  {
+    id: 'gdb',
+    name: 'GeoDatabase',
+    sourceId: 'gdb',
+    query: '',
+    description: 'Load a converted .gdb dataset',
   },
 ];
 
