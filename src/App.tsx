@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, useCallback } from 'react';
-import { loadCustomLocations, type GeoRecord } from './lib/geonames';
+import { loadCustomFile, loadCustomLocations, type GeoRecord } from './lib/geonames';
 import { DATA_SETS, DATA_SOURCES, getSourceById, type DataSet, type DataSource } from './lib/sources';
 import GlobeMap from './components/GlobeMap';
 import RecordDetails from './components/RecordDetails';
@@ -34,6 +34,7 @@ function App() {
 
   const { width, height } = useWindowSize();
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const allResults = useMemo(() => [...results, ...customResults], [results, customResults]);
 
@@ -146,6 +147,24 @@ function App() {
     }
   }
 
+  async function handleLoadFile(file: File) {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await loadCustomFile(file);
+      setActiveTab('filter');
+      setCustomResults(data);
+      setSelected(data[0] ?? null);
+      if (data[0] && data[0].latitude !== undefined && data[0].longitude !== undefined) {
+        globeRef.current?.pointOfView({ lat: data[0].latitude, lng: data[0].longitude, altitude: 0.35 }, 1000);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleDataSetClick(dataSet: DataSet) {
     const nextSource = getSourceById(dataSet.sourceId);
     if (!nextSource) return;
@@ -236,6 +255,22 @@ function App() {
               <button onClick={() => setShowCustomUrl((s) => !s)} disabled={loading}>
                 {showCustomUrl ? 'Cancel' : 'Add API URL'}
               </button>
+              <button onClick={() => fileInputRef.current?.click()} disabled={loading}>
+                Load File
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".geojson,.json,.csv"
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    handleLoadFile(file);
+                    e.target.value = '';
+                  }
+                }}
+              />
             </div>
             <div className="controls-row">
               <input

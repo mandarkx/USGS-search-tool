@@ -89,11 +89,35 @@ export interface CustomRecordInput {
   [key: string]: unknown;
 }
 
+export interface CsvOptions {
+  delimiter?: string;
+  quoteChar?: string;
+}
+
 function toNumber(value: unknown): number | undefined {
   if (typeof value === 'number') return value;
   if (typeof value === 'string') {
     const n = parseFloat(value);
     return isNaN(n) ? undefined : n;
+  }
+  return undefined;
+}
+
+const ID_FIELDS = ['permanent_identifier', 'globalid', 'objectid', 'id', 'gaz_id', 'gid', 'fid', 'feature_id', 'featureid'];
+const NAME_FIELDS = ['name', 'gaz_name', 'feature_name', 'featurename', 'title', 'label', 'display_name'];
+const TYPE_FIELDS = ['featuretype', 'featureclass', 'gaz_featureclass', 'fclass', 'type', 'category', 'kind'];
+const LAYER_FIELDS = ['layername', 'layer_name', 'layer', 'source', 'dataset'];
+const STATE_FIELDS = ['state', 'state_alpha', 'state_name', 'st', 'province', 'region'];
+const COUNTY_FIELDS = ['county', 'county_name', 'cnty', 'parish', 'district'];
+const LAT_FIELDS = ['latitude', 'lat', 'y', 'ycoord'];
+const LNG_FIELDS = ['longitude', 'lng', 'lon', 'x', 'xcoord'];
+
+function findProperty(props: Record<string, unknown>, candidates: string[]): unknown {
+  const keys = Object.keys(props);
+  for (const candidate of candidates) {
+    const lowerCandidate = candidate.toLowerCase();
+    const key = keys.find((k) => k.toLowerCase() === lowerCandidate);
+    if (key !== undefined) return props[key];
   }
   return undefined;
 }
@@ -148,13 +172,13 @@ function geoJsonFeatureToRecord(feature: unknown, index: number, search = 'Custo
   return {
     search,
     rank: index + 1,
-    gazId: props.id !== undefined ? String(props.id) : `custom-${index}`,
-    name: props.name !== undefined ? String(props.name) : 'Unknown',
-    featureType: props.featureType !== undefined ? String(props.featureType) : 'Custom',
-    fcode: props.fcode !== undefined ? String(props.fcode) : '',
-    layerName: props.layerName !== undefined ? String(props.layerName) : 'Custom API',
-    state: props.state !== undefined ? String(props.state) : '',
-    county: props.county !== undefined ? String(props.county) : '',
+    gazId: findProperty(props, ID_FIELDS) !== undefined ? String(findProperty(props, ID_FIELDS)) : `custom-${index}`,
+    name: findProperty(props, NAME_FIELDS) !== undefined ? String(findProperty(props, NAME_FIELDS)) : 'Unknown',
+    featureType: findProperty(props, TYPE_FIELDS) !== undefined ? String(findProperty(props, TYPE_FIELDS)) : 'Custom',
+    fcode: findProperty(props, ['fcode', 'fc']) !== undefined ? String(findProperty(props, ['fcode', 'fc'])) : '',
+    layerName: findProperty(props, LAYER_FIELDS) !== undefined ? String(findProperty(props, LAYER_FIELDS)) : 'Custom API',
+    state: findProperty(props, STATE_FIELDS) !== undefined ? String(findProperty(props, STATE_FIELDS)) : '',
+    county: findProperty(props, COUNTY_FIELDS) !== undefined ? String(findProperty(props, COUNTY_FIELDS)) : '',
     geometryType: f.geometry.type,
     coordinateCount,
     latitude: lat,
@@ -172,20 +196,31 @@ export function normalizeCustomRecord(input: CustomRecordInput, index: number, s
     geojson = input.geometry;
   }
 
+  const latValue = findProperty(input, LAT_FIELDS) ?? input.latitude;
+  const lngValue = findProperty(input, LNG_FIELDS) ?? input.longitude;
+
+  const gazIdValue = findProperty(input, ['gazId', ...ID_FIELDS]);
+  const nameValue = findProperty(input, ['name', ...NAME_FIELDS]);
+  const featureTypeValue = findProperty(input, ['featureType', ...TYPE_FIELDS]);
+  const fcodeValue = findProperty(input, ['fcode', 'fc']);
+  const layerNameValue = findProperty(input, ['layerName', ...LAYER_FIELDS]);
+  const stateValue = findProperty(input, ['state', ...STATE_FIELDS]);
+  const countyValue = findProperty(input, ['county', ...COUNTY_FIELDS]);
+
   return {
     search,
     rank: index + 1,
-    gazId: input.gazId !== undefined ? String(input.gazId) : `custom-${index}`,
-    name: input.name !== undefined ? String(input.name) : 'Unknown',
-    featureType: input.featureType !== undefined ? String(input.featureType) : 'Custom',
-    fcode: input.fcode !== undefined ? String(input.fcode) : '',
-    layerName: input.layerName !== undefined ? String(input.layerName) : 'Custom API',
-    state: input.state !== undefined ? String(input.state) : '',
-    county: input.county !== undefined ? String(input.county) : '',
+    gazId: gazIdValue !== undefined ? String(gazIdValue) : `custom-${index}`,
+    name: nameValue !== undefined ? String(nameValue) : 'Unknown',
+    featureType: featureTypeValue !== undefined ? String(featureTypeValue) : 'Custom',
+    fcode: fcodeValue !== undefined ? String(fcodeValue) : '',
+    layerName: layerNameValue !== undefined ? String(layerNameValue) : 'Custom API',
+    state: stateValue !== undefined ? String(stateValue) : '',
+    county: countyValue !== undefined ? String(countyValue) : '',
     geometryType: input.geometryType !== undefined ? String(input.geometryType) : (geojson ? geojson.type : 'Point'),
     coordinateCount: 1,
-    latitude: toNumber(input.latitude),
-    longitude: toNumber(input.longitude),
+    latitude: toNumber(latValue),
+    longitude: toNumber(lngValue),
     geojson,
     isCustom: true,
   };
@@ -292,31 +327,139 @@ export function extractRecords(data: ArcGisFindResponse, searchText: string): Ge
   });
 }
 
-export async function loadCustomLocations(url: string): Promise<GeoRecord[]> {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Custom API request failed: ${response.status} ${response.statusText}`);
+function parseCsvLine(line: string, delimiter = ',', quoteChar = '"'): string[] {
+  const values: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === quoteChar) {
+      if (inQuotes && line[i + 1] === quoteChar) {
+        current += quoteChar;
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (c === delimiter && !inQuotes) {
+      values.push(current);
+      current = '';
+    } else {
+      current += c;
+    }
   }
-  const data = (await response.json()) as unknown;
+  values.push(current);
+  return values;
+}
 
+function splitCsvLines(text: string, quoteChar = '"'): string[] {
+  const lines: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === quoteChar) {
+      current += c;
+      if (inQuotes && text[i + 1] === quoteChar) {
+        current += quoteChar;
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if ((c === '\n' || c === '\r') && !inQuotes) {
+      if (current || c === '\n') {
+        lines.push(current);
+        current = '';
+      }
+    } else {
+      current += c;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
+export function parseCsv(text: string, options?: CsvOptions): CustomRecordInput[] {
+  const delimiter = options?.delimiter ?? ',';
+  const quoteChar = options?.quoteChar ?? '"';
+  const lines = splitCsvLines(text);
+  if (lines.length === 0) return [];
+
+  const headers = parseCsvLine(lines[0], delimiter, quoteChar).map((h) => h.trim());
+  return lines.slice(1).map((line) => {
+    const values = parseCsvLine(line, delimiter, quoteChar);
+    const row: CustomRecordInput = {};
+    headers.forEach((h, i) => {
+      const value = values[i];
+      row[h] = value === undefined || value === '' ? undefined : value;
+    });
+    return row;
+  });
+}
+
+function parseCustomData(data: unknown, searchLabel = 'Custom'): GeoRecord[] {
   if (data !== null && typeof data === 'object' && 'results' in data && Array.isArray((data as ArcGisFindResponse).results)) {
-    const records = extractRecords(data as ArcGisFindResponse, 'Custom');
+    const records = extractRecords(data as ArcGisFindResponse, searchLabel);
     return records.map((record) => ({ ...record, isCustom: true }));
   }
 
   if (data !== null && typeof data === 'object' && (data as { type?: unknown }).type === 'FeatureCollection' && Array.isArray((data as { features?: unknown[] }).features)) {
     const features = (data as { features: unknown[] }).features;
     return features
-      .map((feature, index) => geoJsonFeatureToRecord(feature, index, 'Custom'))
+      .map((feature, index) => geoJsonFeatureToRecord(feature, index, searchLabel))
       .filter((r): r is GeoRecord => r !== null)
       .map((record) => ({ ...record, isCustom: true }));
   }
 
   if (Array.isArray(data)) {
-    return data.map((item, index) => normalizeCustomRecord(item as CustomRecordInput, index));
+    return data.map((item, index) => ({ ...normalizeCustomRecord(item as CustomRecordInput, index, searchLabel), isCustom: true }));
   }
 
-  throw new Error('Custom API response must be an array of records, a GeoJSON FeatureCollection, or an object with a "results" array.');
+  throw new Error('Data must be an array of records, a GeoJSON FeatureCollection, or an object with a "results" array.');
+}
+
+export async function loadCustomLocations(url: string): Promise<GeoRecord[]> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Custom API request failed: ${response.status} ${response.statusText}`);
+  }
+  const data = (await response.json()) as unknown;
+  return parseCustomData(data, 'Custom');
+}
+
+async function readFileText(file: File): Promise<string> {
+  if (typeof file.text === 'function') {
+    return file.text();
+  }
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error ?? new Error('Failed to read file'));
+    reader.readAsText(file);
+  });
+}
+
+export async function loadCustomFile(file: File): Promise<GeoRecord[]> {
+  const name = file.name.toLowerCase();
+  const searchLabel = file.name.replace(/\.[^.]+$/, '');
+
+  if (name.endsWith('.csv')) {
+    const text = await readFileText(file);
+    const rows = parseCsv(text);
+    return rows.map((row, index) => ({ ...normalizeCustomRecord(row, index, searchLabel), isCustom: true }));
+  }
+
+  if (name.endsWith('.geojson') || name.endsWith('.json')) {
+    const text = await readFileText(file);
+    let data: unknown;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error('Invalid JSON file');
+    }
+    return parseCustomData(data, searchLabel);
+  }
+
+  throw new Error('Unsupported file type. Please use .geojson, .json, or .csv.');
 }
 
 export function buildFindUrl(searchText: string, maxRecords = 100): string {

@@ -88,19 +88,21 @@ export default function GlobeMap({
       const selected = record.gazId === selectedId;
       const color = layerColor(record, selected);
 
-      p.push({
-        ...record,
-        lat: record.latitude ?? 0,
-        lng: record.longitude ?? 0,
-        color,
-        size: selected ? 1.0 : record.isCustom ? 0.6 : 0.4,
-      });
+      if (record.latitude !== undefined && record.longitude !== undefined) {
+        p.push({
+          ...record,
+          lat: record.latitude,
+          lng: record.longitude,
+          color,
+          size: selected ? 1.0 : record.isCustom ? 0.6 : 0.4,
+        });
 
-      labels.push({
-        ...record,
-        lat: record.latitude ?? 0,
-        lng: record.longitude ?? 0,
-      });
+        labels.push({
+          ...record,
+          lat: record.latitude,
+          lng: record.longitude,
+        });
+      }
 
       const geojson = record.geojson;
       if (geojson) {
