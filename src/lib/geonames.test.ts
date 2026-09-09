@@ -68,6 +68,44 @@ describe('loadCustomFile', () => {
     expect(records[0].latitude).toBeCloseTo(44.662189);
     expect(records[0].longitude).toBeCloseTo(-111.107034);
   });
+
+  it('preserves Polygon and LineString geometry', async () => {
+    const geojson = JSON.stringify({
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: { id: 'poly1', name: 'Test Polygon', featureType: 'Area' },
+          geometry: {
+            type: 'Polygon',
+            coordinates: [[[-110.9, 44.4], [-110.8, 44.4], [-110.8, 44.5], [-110.9, 44.5], [-110.9, 44.4]]],
+          },
+        },
+        {
+          type: 'Feature',
+          properties: { id: 'line1', name: 'Test Line', featureType: 'Stream' },
+          geometry: {
+            type: 'LineString',
+            coordinates: [[-110.85, 44.45], [-110.82, 44.47]],
+          },
+        },
+      ],
+    });
+    const file = new File([geojson], 'polygon.geojson', { type: 'application/geo+json' });
+    const records = await loadCustomFile(file);
+
+    expect(records).toHaveLength(2);
+    expect(records[0].geometryType).toBe('Polygon');
+    expect(records[0].geojson).toEqual({
+      type: 'Polygon',
+      coordinates: [[[-110.9, 44.4], [-110.8, 44.4], [-110.8, 44.5], [-110.9, 44.5], [-110.9, 44.4]]],
+    });
+    expect(records[1].geometryType).toBe('LineString');
+    expect(records[1].geojson).toEqual({
+      type: 'LineString',
+      coordinates: [[-110.85, 44.45], [-110.82, 44.47]],
+    });
+  });
 });
 
 describe('parseCsv', () => {

@@ -1,0 +1,65 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "poly1",
+        "name": "Yellowstone Polygon",
+        "featureType": "Area",
+        "state": "WY",
+        "county": "Teton",
+        "permanent_identifier": "poly-001",
+        "streamlevel": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-110.9, 44.4],
+            [-110.8, 44.4],
+            [-110.8, 44.5],
+            [-110.9, 44.5],
+            [-110.9, 44.4]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "line1",
+        "name": "Yellowstone River",
+        "featureType": "Stream",
+        "state": "WY",
+        "county": "Teton",
+        "permanent_identifier": "line-001",
+        "streamlevel": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-110.85, 44.45],
+          [-110.82, 44.47],
+          [-110.79, 44.46],
+          [-110.75, 44.48]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "pt1",
+        "name": "Old Faithful",
+        "featureType": "Geyser",
+        "state": "WY",
+        "county": "Teton",
+        "permanent_identifier": "pt-001"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-110.8313, 44.4605]
+      }
+    }
+  ]
+}
