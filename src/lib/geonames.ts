@@ -225,9 +225,7 @@ export function normalizeCustomRecord(input: CustomRecordInput, index: number, s
     longitude: toNumber(lngValue),
     geojson,
     isCustom: true,
-    attributes: Object.fromEntries(
-      Object.entries(input).filter(([key]) => !['geojson', 'geometry'].includes(key))
-    ),
+    attributes: { ...input },
   };
 }
 
